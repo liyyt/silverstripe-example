@@ -1,0 +1,52 @@
+version: '2.1'
+
+services:
+
+  php-fpm:
+    image: liyyt/silverstripe-example-php-fpm:latest
+    environment:
+      DATABASE_HOST: database
+      DATABASE_PASS: ${DATABASE_PASS:-password}
+      DATABASE_USER: ${DATABASE_USER:-root}
+      REDIS_SERVER: redis
+    build:
+      context: .
+      dockerfile: Dockerfile.php-fpm
+    tty: true
+    stdin_open: true
+    links:
+    - redis
+    - database
+    volumes:
+    - .:/var/www/html
+
+  nginx:
+    image: liyyt/silverstripe-example-nginx:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    tty: true
+    stdin_open: true
+    links:
+    - php-fpm
+    ports:
+    - 80:80
+    volumes_from:
+    - php-fpm
+
+  redis:
+    image: redis:alpine
+
+  database:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASS:-password}
+      MYSQL_DATABASE: ${DATABASE:-SS_mysite}
+    ports:
+    - 3306:3306
+    volumes:
+    - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
+    driver: local

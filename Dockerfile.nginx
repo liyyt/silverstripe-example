@@ -1,0 +1,3 @@
+FROM liyyt/silverstripe-nginx:latest
+MAINTAINER Aaron Bolanos <aaron@liyyt.com>
+

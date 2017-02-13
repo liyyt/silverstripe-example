@@ -1,0 +1,25 @@
+FROM liyyt/silverstripe-php-fpm:latest
+MAINTAINER Aaron Bolanos <aaron@liyyt.com>
+
+WORKDIR /var/www/html
+
+COPY assets/ assets/
+COPY cms/ cms/
+COPY framework/ framework/
+COPY mysite/ mysite/
+COPY reports/ reports/
+COPY siteconfig/ siteconfig/
+COPY themes/ themes/
+COPY .editorconfig .editorconfig
+
+COPY composer.json composer.json
+COPY composer.lock composer.lock
+COPY favicon.ico favicon.ico
+COPY index.php index.php
+COPY install.php install.php
+
+RUN composer install --no-dev --optimize-autoloader \
+    && chown -R www-data:www-data /var/www/html/assets \
+    && touch /var/www/html/mysite/_config.php \
+    && chown www-data:www-data /var/www/html/mysite/_config.php \
+    && chown www-data:www-data /var/www/html/mysite/_config/config.yml
