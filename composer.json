@@ -7,11 +7,18 @@
 		"silverstripe/framework": "3.5.2",
 		"silverstripe/reports": "3.5.2",
 		"silverstripe/siteconfig": "3.5.2",
-		"silverstripe-themes/simple": "3.1.*"
+		"silverstripe-themes/simple": "3.1.*",
+		"liyyt/silverstripe-cloudassets-s3": "dev-master"
 	},
 	"require-dev": {
 		"phpunit/PHPUnit": "~3.7@stable"
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/liyyt/silverstripe-cloudassets-s3"
+		}
+	],
 	"extra": {
 		"branch-alias": {
 			"3.x-dev": "3.5.x-dev"
