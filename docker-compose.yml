@@ -32,7 +32,7 @@ services:
       - redis
       - database
     volumes:
-      - .:/var/www/html
+#      - .:/var/www/html
       - data-volume:/var/www/html
 
   lb:
