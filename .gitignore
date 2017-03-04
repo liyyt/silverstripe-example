@@ -11,3 +11,6 @@ _ss_environment.php
 /vendor/
 
 /.idea/
+
+/cloudassets-s3/
+/cloudassets/
