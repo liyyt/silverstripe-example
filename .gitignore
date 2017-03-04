@@ -9,6 +9,7 @@ _ss_environment.php
 
 # ignore composer vendor folder
 /vendor/
+/composer.lock
 
 /.idea/
 
