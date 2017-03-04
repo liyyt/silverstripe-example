@@ -1,38 +1,53 @@
-version: '2.1'
+version: '3'
 
 services:
 
   php-fpm:
     image: liyyt/silverstripe-example-php-fpm:latest
     environment:
-      DATABASE_HOST: database
-      DATABASE_PASS: ${DATABASE_PASS:-password}
-      DATABASE_USER: ${DATABASE_USER:-root}
-      REDIS_SERVER: redis
+      SS_DATABASE_CLASS: 'MySQLDatabase'
+      SS_DATABASE_SERVER: database
+      SS_DATABASE_PORT: 3306
+      SS_DATABASE_NAME: ${DATABASE:-SS_mysite}
+      SS_DATABASE_USERNAME: ${DATABASE_USER:-root}
+      SS_DATABASE_PASSWORD: ${DATABASE_PASS:-password}
+#      SS_DATABASE_PREFIX: ${DATABASE_PREFIX:}
+#      SS_DATABASE_SUFFIX: ${DATABASE_SUFFIX:}
+      SS_DATABASE_TIMEZONE: UTC
+      SS_SEND_ALL_EMAILS_TO: 'noreply@liyyt.com'
+      SS_SEND_ALL_EMAILS_FROM: 'noreply@liyyt.com'
+      SS_DEFAULT_ADMIN_USERNAME: 'admin@liyyt.com'
+      SS_DEFAULT_ADMIN_PASSWORD: 'password'
+      SS_USE_BASIC_AUTH: 'false'
+      S3_BUCKET: 'ss_bucket'
+      S3_REGION: 'us-east-1'
+      S3_API_KEY: 'replace-me'
+      S3_API_SECRET: 'replace-me'
     build:
       context: .
       dockerfile: Dockerfile.php-fpm
     tty: true
     stdin_open: true
-    links:
-    - redis
-    - database
+    depends_on:
+      - redis
+      - database
     volumes:
-    - .:/var/www/html
+      - .:/var/www/html
+      - data-volume:/var/www/html
 
-  nginx:
-    image: liyyt/silverstripe-example-nginx:latest
+  lb:
+    image: liyyt/silverstripe-example-openresty:latest
     build:
       context: .
-      dockerfile: Dockerfile.nginx
+      dockerfile: Dockerfile.openresty
     tty: true
     stdin_open: true
-    links:
-    - php-fpm
+    depends_on:
+      - php-fpm
     ports:
-    - 80:80
-    volumes_from:
-    - php-fpm
+      - 80:80
+    volumes:
+      - data-volume:/var/www/html
 
   redis:
     image: redis:alpine
@@ -43,10 +58,12 @@ services:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASS:-password}
       MYSQL_DATABASE: ${DATABASE:-SS_mysite}
     ports:
-    - 3306:3306
+      - 3306:3306
     volumes:
-    - dbdata:/var/lib/mysql
+      - db-volume:/var/lib/mysql
 
 volumes:
-  dbdata:
+  db-volume:
+    driver: local
+  data-volume:
     driver: local
