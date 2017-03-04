@@ -13,7 +13,6 @@ COPY themes/ themes/
 COPY .editorconfig .editorconfig
 
 COPY composer.json composer.json
-COPY composer.lock composer.lock
 COPY favicon.ico favicon.ico
 COPY index.php index.php
 
