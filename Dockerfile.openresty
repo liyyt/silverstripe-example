@@ -1,0 +1,3 @@
+FROM liyyt/silverstripe-openresty:latest
+MAINTAINER Aaron Bolanos <aaron@liyyt.com>
+
