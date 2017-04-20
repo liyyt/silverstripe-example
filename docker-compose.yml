@@ -5,6 +5,10 @@ services:
   php-fpm:
     image: liyyt/silverstripe-example-php-fpm:latest
     environment:
+      SS_WEBSITE_URL: 'http://localhost'
+      SS_HOST: 'localhost'
+#      SS_ENVIRONMENT_TYPE: 'live'
+      SS_ENVIRONMENT_TYPE: 'dev'
       SS_DATABASE_CLASS: 'MySQLDatabase'
       SS_DATABASE_SERVER: database
       SS_DATABASE_PORT: 3306
@@ -32,8 +36,8 @@ services:
       - redis
       - database
     volumes:
-#      - .:/var/www/html
       - data-volume:/var/www/html
+#      - .:/var/www/html
 
   lb:
     image: liyyt/silverstripe-example-openresty:latest

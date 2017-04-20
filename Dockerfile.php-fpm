@@ -4,19 +4,23 @@ MAINTAINER Aaron Bolanos <aaron@liyyt.com>
 WORKDIR /var/www/html
 
 COPY assets/ assets/
-COPY cms/ cms/
-COPY framework/ framework/
 COPY mysite/ mysite/
-COPY reports/ reports/
-COPY siteconfig/ siteconfig/
 COPY themes/ themes/
 COPY .editorconfig .editorconfig
 
 COPY composer.json composer.json
-COPY favicon.ico favicon.ico
+COPY _ss_environment.php _ss_environment.php
 COPY index.php index.php
 
-RUN composer install --no-dev --optimize-autoloader \
-    && chown -R www-data:www-data /var/www/html/assets \
-    && chown www-data:www-data /var/www/html/mysite/_config.php \
-    && chown www-data:www-data /var/www/html/mysite/_config/config.yml
+RUN chown -R www-data:www-data /var/www/html
+USER www-data
+RUN composer install --no-dev --optimize-autoloader
+
+# Reset user to root
+# https://github.com/docker-library/php/issues/95
+USER root
+
+RUN rm -rf /tmp/*
+
+EXPOSE 9000
+CMD ["php-fpm"]
