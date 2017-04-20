@@ -15,3 +15,7 @@ _ss_environment.php
 
 /cloudassets-s3/
 /cloudassets/
+/cms/
+/framework/
+/reports/
+/siteconfig/
